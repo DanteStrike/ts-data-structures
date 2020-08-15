@@ -1,0 +1,75 @@
+{
+  "name": "ts-datastructures",
+  "version": "0.0.1",
+  "description": "test lib npm",
+  "main": "es/index.js",
+  "scripts": {
+    "lint": "eslint --fix --ext js,ts ./src && prettier --write ./src && tsc --noEmit",
+    "test": "jest --passWithNoTests",
+    "gulp": "gulp",
+    "build": "npm run lint && npm run test && npm run gulp build",
+    "tasks": "echo gulp tasks list: && gulp --tasks --depth 1 && echo npm scripts list && npm run"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx tsc --noEmit && npx lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix --ext .ts"
+    ]
+  },
+  "files": [
+    "es/**/*",
+    "cjs/**/*"
+  ],
+  "types": "es/index.d.ts",
+  "author": "Dante",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "7.11.1",
+    "@babel/preset-env": "7.11.0",
+    "@types/jest": "26.0.8",
+    "@typescript-eslint/eslint-plugin": "3.8.0",
+    "@typescript-eslint/parser": "3.8.0",
+    "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
+    "eslint": "7.6.0",
+    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-jest": "23.20.0",
+    "eslint-plugin-optimize-regex": "1.2.0",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-sonarjs": "0.5.0",
+    "gulp": "4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-cli": "2.3.0",
+    "gulp-typescript": "6.0.0-alpha.1",
+    "husky": "4.2.5",
+    "jest": "26.2.2",
+    "lint-staged": "10.2.11",
+    "prettier": "2.0.5",
+    "ts-jest": "26.1.4",
+    "typescript": "3.9.7"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanteStrike/lib-bench.git"
+  },
+  "keywords": [
+    "test",
+    "lib",
+    "npm"
+  ],
+  "bugs": {
+    "url": "https://github.com/DanteStrike/lib-bench/issues"
+  },
+  "homepage": "https://github.com/DanteStrike/lib-bench#readme"
+}

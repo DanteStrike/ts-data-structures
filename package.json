@@ -1,7 +1,7 @@
 {
   "name": "ts-datastructures",
   "version": "0.0.1",
-  "description": "test lib npm",
+  "description": "typescript data-structures",
   "main": "es/index.js",
   "scripts": {
     "lint": "eslint --fix --ext js,ts ./src && prettier --write ./src && tsc --noEmit",
@@ -58,18 +58,5 @@
     "ts-jest": "26.1.4",
     "typescript": "3.9.7"
   },
-  "dependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DanteStrike/lib-bench.git"
-  },
-  "keywords": [
-    "test",
-    "lib",
-    "npm"
-  ],
-  "bugs": {
-    "url": "https://github.com/DanteStrike/lib-bench/issues"
-  },
-  "homepage": "https://github.com/DanteStrike/lib-bench#readme"
+  "dependencies": {}
 }

@@ -1,27 +1,40 @@
 {
   "env": {
     "node": true,
-    "es6": true
+    "browser": true,
+    "jest": true
   },
-  "extends": [
-    "eslint:recommended",
-    "airbnb-base",
-    "plugin:sonarjs/recommended",
-    "plugin:prettier/recommended"
+  "plugins": [
+    "@typescript-eslint",
+    "jest",
+    "unicorn"
   ],
+  "extends": [
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:jest/recommended",
+    "plugin:unicorn/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 10,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": ["tsconfig.json"],
+    "tsconfigRootDir": "."
   },
-  "plugins": ["sonarjs", "optimize-regex"],
   "rules": {
     "max-len": ["warn", { "code": 120 }],
     "require-jsdoc": 0,
-    "optimize-regex/optimize-regex": "warn",
     "padding-line-between-statements": [
       "error",
-      { "blankLine": "always", "prev": "*", "next": "return" },
-      { "blankLine": "always", "prev": "*", "next": "block-like" }
-    ]
+      { "blankLine": "always", "prev": "*", "next": "return" }
+//      { "blankLine": "always", "prev": "*", "next": "block-like" }
+    ],
+    "@typescript-eslint/lines-between-class-members": "off"
+//    "unicorn/no-null": "off"
   }
 }

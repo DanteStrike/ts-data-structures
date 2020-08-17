@@ -34,7 +34,8 @@
       { "blankLine": "always", "prev": "*", "next": "return" }
 //      { "blankLine": "always", "prev": "*", "next": "block-like" }
     ],
-    "@typescript-eslint/lines-between-class-members": "off"
+    "@typescript-eslint/lines-between-class-members": "off",
+    "unicorn/prevent-abbreviations": "off"
 //    "unicorn/no-null": "off"
   }
 }

@@ -1,29 +1,6 @@
 import LinkedListNode from './linked-list-node';
 import { Position } from './enum';
 
-// interface ILinkedList {
-//   pushFront: (value: any) => void;
-//   popFront: () => void;
-//   getFirst: () => LinkedListNode | null;
-//
-//   push: (value: any) => void;
-//   pop: () => void;
-//   getLast: () => LinkedListNode | null;
-//
-//   add: (listNode: LinkedListNode, value: any, pos: Position) => void;
-//
-//   // addBefore: (listNode: LinkedListNode, value: any) => void,
-//   // addAfter: (listNode: LinkedListNode, value: any) => void,
-//
-//   // find: (value: any) => LinkedListNode,
-//   // findIndex: (value: any) => number,
-//
-//   // isEmpty: () => boolean,
-//   getSize: () => number;
-//
-//   // delete: (listNode: LinkedListNode) => void
-// }
-
 class LinkedList<T> {
   private head?: LinkedListNode<T>;
   private tail?: LinkedListNode<T>;
@@ -35,11 +12,76 @@ class LinkedList<T> {
     }
   }
 
-  getFirst(): LinkedListNode<T> | undefined {
+  private resetListPointers(): void {
+    this.head = undefined;
+    this.tail = undefined;
+  }
+
+  private addFirstNode(value: T): void {
+    const firstListNode: LinkedListNode<T> = new LinkedListNode(value);
+    this.head = firstListNode;
+    this.tail = firstListNode;
+    this.size += 1;
+  }
+
+  private addBeforeHead(value: T): void {
+    const newLinkedListNode: LinkedListNode<T> = new LinkedListNode(value);
+    newLinkedListNode.next = this.head;
+    this.head = newLinkedListNode;
+    this.size += 1;
+  }
+
+  private addAfterNode(value: T, listNode: LinkedListNode<T>): void {
+    const dNode = listNode;
+    const newLinkedListNode: LinkedListNode<T> = new LinkedListNode(value);
+    newLinkedListNode.next = dNode.next;
+    dNode.next = newLinkedListNode;
+    if (dNode === this.tail) {
+      this.tail = newLinkedListNode;
+    }
+    this.size += 1;
+  }
+
+  private deleteLastNode(): void {
+    this.resetListPointers();
+    this.size -= 1;
+  }
+
+  private deleteHeadNode(listNode: LinkedListNode<T>): void {
+    this.head = listNode.next;
+    this.size -= 1;
+  }
+
+  private deleteNode(listNode: LinkedListNode<T>): void {
+    const referenceNode = this.findNode(listNode, (node, target) => node.next === target);
+
+    if (!referenceNode) {
+      throw new Error('listNode not found');
+    }
+
+    if (listNode === this.tail) {
+      this.tail = referenceNode;
+      referenceNode.next = undefined;
+    } else {
+      referenceNode.next = listNode.next;
+    }
+
+    this.size -= 1;
+  }
+
+  // private swapNeighbors(aListNode: LinkedListNode<T>, bListNode: LinkedListNode<T>): void {
+  //
+  // };
+  //
+  // private swapNodes(aListNode: LinkedListNode<T>, bListNode: LinkedListNode<T>): void {
+  //
+  // };
+
+  getHead(): LinkedListNode<T> | undefined {
     return this.head;
   }
 
-  getLast(): LinkedListNode<T> | undefined {
+  getTail(): LinkedListNode<T> | undefined {
     return this.tail;
   }
 
@@ -49,82 +91,31 @@ class LinkedList<T> {
 
   push(...values: Array<T>): void {
     values.forEach((value) => {
-      if (!this.tail) {
-        this.addFirstNode(value);
-
-        return;
-      }
-
-      const newLinkedListNode: LinkedListNode<T> = new LinkedListNode(value);
-      this.tail.next = newLinkedListNode;
-      this.tail = newLinkedListNode;
+      this.add(value);
     });
-
-    this.size += values.length;
   }
 
   pop(): void {
-    if (!this.tail) {
-      return;
-    }
-
-    if (this.head === this.tail) {
-      this.resetListPointers();
-
-      return;
-    }
-
-    this.tail = this.findNode(this.tail, (node, target) => node.next === target);
-
-    this.size -= 1;
+    this.delete();
   }
 
   pushFront(...values: Array<T>): void {
     values.forEach((value) => {
-      if (!this.head) {
-        this.addFirstNode(value);
-
-        return;
-      }
-
-      const newLinkedListNode: LinkedListNode<T> = new LinkedListNode(value);
-      newLinkedListNode.next = this.head;
-      this.head = newLinkedListNode;
+      this.add(value, Position.BEFORE, this.head);
     });
-
-    this.size += values.length;
   }
 
   popFront(): void {
-    if (!this.head) {
-      return;
-    }
-
-    if (this.head === this.tail) {
-      this.resetListPointers();
-
-      return;
-    }
-
-    this.head = this.head.next;
-    this.size -= 1;
+    this.delete(this.head);
   }
 
   findNode(
     target: LinkedListNode<T> | T,
-    compareCB?: (node: LinkedListNode<T>, target: LinkedListNode<T> | T) => boolean
+    compareCB = (node: LinkedListNode<T>, targetValue: LinkedListNode<T> | T): boolean => node.value === targetValue
   ): LinkedListNode<T> | undefined {
-    let comparer;
-
-    if (!compareCB) {
-      comparer = (node: LinkedListNode<T>, targetValue: LinkedListNode<T> | T): boolean => node.value === targetValue;
-    } else {
-      comparer = compareCB;
-    }
-
     let foundedNode = this.head;
     while (foundedNode) {
-      if (comparer(foundedNode, target)) {
+      if (compareCB(foundedNode, target)) {
         break;
       }
 
@@ -134,19 +125,15 @@ class LinkedList<T> {
     return foundedNode;
   }
 
-  add(value: T, pos: Position = Position.AFTER, listNode: LinkedListNode<T> | undefined = this.tail): void {
-    if (listNode === undefined) {
+  add(value: T, pos: Position = Position.AFTER, listNode = this.tail): void {
+    if (!listNode) {
       this.addFirstNode(value);
-      this.size += 1;
 
       return;
     }
 
     if (listNode === this.head && pos === Position.BEFORE) {
-      const newLinkedListNode: LinkedListNode<T> = new LinkedListNode(value);
-      newLinkedListNode.next = this.head;
-      this.head = newLinkedListNode;
-      this.size += 1;
+      this.addBeforeHead(value);
 
       return;
     }
@@ -170,22 +157,39 @@ class LinkedList<T> {
     }
 
     if (!referenceNode) {
-      throw new Error('not found');
+      throw new Error('listNode not found');
     }
 
-    const newLinkedListNode: LinkedListNode<T> = new LinkedListNode(value);
-    newLinkedListNode.next = referenceNode.next;
-    referenceNode.next = newLinkedListNode;
-    this.size += 1;
-
-    if (referenceNode === this.tail) {
-      this.tail = newLinkedListNode;
-    }
+    this.addAfterNode(value, referenceNode);
   }
+
+  delete(listNode = this.tail): void {
+    if (!listNode) {
+      return;
+    }
+
+    if (listNode === this.head && listNode === this.tail) {
+      this.deleteLastNode();
+
+      return;
+    }
+
+    if (listNode === this.head) {
+      this.deleteHeadNode(listNode);
+
+      return;
+    }
+
+    this.deleteNode(listNode);
+  }
+
+  // swap(aListNode: LinkedListNode<T>, bListNode: LinkedListNode<T>) {
+  //
+  // }
 
   toArray(): Array<T> {
     const list = [];
-    let currentListNode: LinkedListNode<T> | undefined = this.head;
+    let currentListNode = this.head;
 
     while (currentListNode) {
       list.push(currentListNode.value);
@@ -196,20 +200,20 @@ class LinkedList<T> {
   }
 
   toString(): string {
-    const list = this.toArray();
+    let resultStr = '';
+    let currentListNode = this.head;
 
-    return list.join(`,`);
-  }
+    while (currentListNode) {
+      if (resultStr === '') {
+        resultStr += currentListNode.toString();
+      } else {
+        resultStr += `,${currentListNode.toString()}`;
+      }
 
-  private resetListPointers(): void {
-    this.head = undefined;
-    this.tail = undefined;
-  }
+      currentListNode = currentListNode.next;
+    }
 
-  private addFirstNode(value: T): void {
-    const firstListNode: LinkedListNode<T> = new LinkedListNode(value);
-    this.head = firstListNode;
-    this.tail = firstListNode;
+    return resultStr;
   }
 }
 

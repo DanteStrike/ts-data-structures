@@ -2,9 +2,9 @@ import LinkedListNode from './linked-list-node';
 import { Position } from '../../enum';
 
 class LinkedList<T> {
-  private head?: LinkedListNode<T>;
-  private tail?: LinkedListNode<T>;
-  private size = 0;
+  protected head?: LinkedListNode<T>;
+  protected tail?: LinkedListNode<T>;
+  protected size = 0;
 
   constructor(values?: T[]) {
     if (values) {
@@ -12,21 +12,26 @@ class LinkedList<T> {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  protected createNode(value: T, nextNode?: LinkedListNode<T>): LinkedListNode<T> {
+    return new LinkedListNode(value, nextNode);
+  }
+
   private addFirstNode(value: T): void {
-    const firstListNode: LinkedListNode<T> = new LinkedListNode(value);
+    const firstListNode = this.createNode(value);
     this.head = firstListNode;
     this.tail = firstListNode;
     this.size += 1;
   }
 
   private addBeforeHead(value: T): void {
-    this.head = new LinkedListNode(value, this.head);
+    this.head = this.createNode(value, this.head);
     this.size += 1;
   }
 
-  private addAfterNode(value: T, listNode: LinkedListNode<T>): void {
+  protected addAfterNode(value: T, listNode: LinkedListNode<T>): void {
     const dNode = listNode;
-    const newLinkedListNode: LinkedListNode<T> = new LinkedListNode(value, dNode.next);
+    const newLinkedListNode = this.createNode(value, dNode.next);
     dNode.next = newLinkedListNode;
     if (dNode === this.tail) {
       this.tail = newLinkedListNode;
@@ -34,7 +39,7 @@ class LinkedList<T> {
     this.size += 1;
   }
 
-  private deleteHeadNode(listNode: LinkedListNode<T>): void {
+  protected deleteHeadNode(listNode: LinkedListNode<T>): void {
     if (listNode === this.tail) {
       this.clear();
 
@@ -45,7 +50,7 @@ class LinkedList<T> {
     this.size -= 1;
   }
 
-  private deleteNode(listNode: LinkedListNode<T>): void {
+  protected deleteNode(listNode: LinkedListNode<T>): void {
     const referenceNode = this.findNode((node) => node.next === listNode);
 
     if (!referenceNode) {

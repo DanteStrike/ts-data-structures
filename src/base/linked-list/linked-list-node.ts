@@ -2,9 +2,9 @@ class LinkedListNode<T> {
   value: T & { toString?: () => string };
   next?: LinkedListNode<T>;
 
-  constructor(value: T) {
+  constructor(value: T, next?: LinkedListNode<T>) {
     this.value = value;
-    this.next = undefined;
+    this.next = next;
   }
 
   toString(): string {

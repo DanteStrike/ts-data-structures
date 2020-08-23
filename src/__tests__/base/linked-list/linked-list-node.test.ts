@@ -1,4 +1,4 @@
-import LinkedListNode from '../linked-list-node';
+import LinkedListNode from '../../../base/linked-list/linked-list-node';
 
 describe('DS LinkedListNode should work correctly', () => {
   it('should init', () => {

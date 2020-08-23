@@ -102,4 +102,19 @@ describe('DS DoubleLinkedList should work correctly', () => {
     expect(linkedList.toArray()).toEqual([]);
     expect(linkedList.getSize()).toBe(0);
   });
+
+  it('should chain methods', () => {
+    const linkedList = new DoubleLinkedList([3, 3, 3]);
+
+    linkedList
+      .clear()
+      .push(1, 2)
+      .pushFront(4, 4)
+      .pop()
+      .popFront()
+      .add(5)
+      .delete(linkedList.findNode((node) => (node.prev ? node.prev.value === 1 : false)));
+
+    expect(linkedList.toArray()).toEqual([4, 1]);
+  });
 });

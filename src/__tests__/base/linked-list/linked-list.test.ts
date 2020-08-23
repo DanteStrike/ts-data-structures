@@ -195,4 +195,19 @@ describe('DS LinkedList should work correctly', () => {
     expect(linkedList.toArray()).toEqual([]);
     expect(linkedList.getSize()).toBe(0);
   });
+
+  it('should chain methods', () => {
+    const linkedList = new LinkedList([1, 1, 1]);
+
+    linkedList
+      .clear()
+      .push(3, 9, 2)
+      .pushFront(5)
+      .pop()
+      .popFront()
+      .add(5)
+      .delete(linkedList.findNode((node) => node.value === 9));
+
+    expect(linkedList.toArray()).toEqual([3, 5]);
+  });
 });

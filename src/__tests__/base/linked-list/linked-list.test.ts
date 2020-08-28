@@ -11,6 +11,7 @@ describe('DS LinkedList should work correctly', () => {
     expect(linkedList.toArray()).toEqual([]);
     expect(linkedList.toString()).toBe(``);
     expect(linkedList.getSize()).toBe(0);
+    expect(linkedList.isEmpty()).toBe(true);
   });
 
   it('should init list from array', () => {
@@ -24,6 +25,7 @@ describe('DS LinkedList should work correctly', () => {
     expect(linkedList.toArray()).toEqual([1, 3, 4, 66, 111, 9]);
     expect(linkedList.toString()).toBe(`1,3,4,66,111,9`);
     expect(linkedList.getSize()).toBe(6);
+    expect(linkedList.isEmpty()).toBe(false);
   });
 
   it('should clean list', () => {

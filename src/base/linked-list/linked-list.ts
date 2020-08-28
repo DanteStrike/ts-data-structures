@@ -208,6 +208,10 @@ class LinkedList<T> {
     return this;
   }
 
+  isEmpty(): boolean {
+    return this.size === 0;
+  }
+
   toArray(): T[] {
     const list: T[] = [];
 

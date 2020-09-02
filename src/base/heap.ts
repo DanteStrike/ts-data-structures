@@ -1,9 +1,9 @@
 class Heap<T> {
-  private readonly heapContainer: T[];
+  private container: T[];
   private readonly compFunc: (a: T, b: T) => boolean;
 
   constructor(arr: T[] = [], compFunc: (a: T, b: T) => boolean = (a, b) => a > b) {
-    this.heapContainer = arr.slice();
+    this.container = arr.slice();
     this.compFunc = compFunc;
     this.build();
   }
@@ -25,19 +25,15 @@ class Heap<T> {
   }
 
   private getNode(nodeIndex: number): T {
-    return this.heapContainer[nodeIndex];
+    return this.container[nodeIndex];
   }
 
   private getLeftChild(nodeIndex: number): T {
-    return this.heapContainer[Heap.getLeftChildIndex(nodeIndex)];
+    return this.container[Heap.getLeftChildIndex(nodeIndex)];
   }
 
   private getRightChild(nodeIndex: number): T {
-    return this.heapContainer[Heap.getRightChildIndex(nodeIndex)];
-  }
-
-  private getSize(): number {
-    return this.heapContainer.length;
+    return this.container[Heap.getRightChildIndex(nodeIndex)];
   }
 
   private checkIndexInRange(index: number): boolean {
@@ -50,9 +46,9 @@ class Heap<T> {
   }
 
   private swap(aIndex: number, bIndex: number): void {
-    const tmp = this.heapContainer[aIndex];
-    this.heapContainer[aIndex] = this.heapContainer[bIndex];
-    this.heapContainer[bIndex] = tmp;
+    const tmp = this.container[aIndex];
+    this.container[aIndex] = this.container[bIndex];
+    this.container[bIndex] = tmp;
   }
 
   private heapifyDown(nodeIndex: number): void {
@@ -121,10 +117,14 @@ class Heap<T> {
   }
 
   private addOne(value: T): void {
-    this.heapContainer.push(value);
+    this.container.push(value);
     const valueIndex = this.getSize() - 1;
 
     this.heapifyUp(valueIndex);
+  }
+
+  public getSize(): number {
+    return this.container.length;
   }
 
   public add(...values: T[]): this {
@@ -137,7 +137,7 @@ class Heap<T> {
     this.checkIndexInRange(index);
 
     const oldValue = this.getNode(index);
-    this.heapContainer[index] = value;
+    this.container[index] = value;
     if (value !== oldValue) {
       this.heapifyValueChange(index, oldValue, value);
     }
@@ -154,10 +154,10 @@ class Heap<T> {
 
     if (lastValue !== removedValue) {
       this.swap(index, lastIndex);
-      this.heapContainer.pop();
+      this.container.pop();
       this.heapifyValueChange(index, removedValue, lastValue);
     } else {
-      this.heapContainer.pop();
+      this.container.pop();
     }
 
     return this;
@@ -168,7 +168,7 @@ class Heap<T> {
       throw new Error('heap is empty');
     }
 
-    return this.heapContainer[0];
+    return this.container[0];
   }
 
   public popRoot(): T {
@@ -179,14 +179,18 @@ class Heap<T> {
   }
 
   toArray(): T[] {
-    return this.heapContainer.slice();
+    return this.container.slice();
   }
 
   toSortedArray(): T[] {
     const result: T[] = [];
+    const backupContainer = this.container.slice();
+
     while (!this.isEmpty()) {
       result.push(this.popRoot());
     }
+
+    this.container = backupContainer;
 
     return result;
   }

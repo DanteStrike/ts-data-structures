@@ -2,10 +2,12 @@ import hashFuncs from './hash-funcs';
 import LinkedList from '../linked-list/linked-list';
 import LinkedListNode from '../linked-list/linked-list-node';
 
+type HashTableList<T> = { key: string; desc: T };
+
 class HashTable<T> {
   private static readonly defaultTableSize = 32;
 
-  private readonly table: LinkedList<{ key: string; desc: T }>[];
+  private readonly table: LinkedList<HashTableList<T>>[];
   private readonly hashFunc: (key: string) => number;
   private readonly keys = new Set<string>();
 
@@ -18,7 +20,7 @@ class HashTable<T> {
     return this.hashFunc(key) % this.table.length;
   }
 
-  private searchNodeByKey(key: string): LinkedListNode<{ key: string; desc: T }> | null {
+  private searchNodeByKey(key: string): LinkedListNode<HashTableList<T>> | null {
     return this.table[this.hash(key)].findNode((node) => (node ? node.value.key === key : false));
   }
 
